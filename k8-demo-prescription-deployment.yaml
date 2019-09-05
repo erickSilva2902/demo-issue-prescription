@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: demo-prescription-deployment
+spec:
+  selector:
+    matchLabels:
+      app: webserver-demo-prescription
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webserver-demo-prescription
+    spec:
+      containers:
+      - name: demo-prescription
+        image: esilva2902/demo-prescription:8-alpine-0.1.86
+        ports:
+        - containerPort: 8080

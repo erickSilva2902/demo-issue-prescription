@@ -1,0 +1,179 @@
+<div [hidden]="drugsFlag">
+
+  <div class="container">
+    <h1>Prescripción</h1>
+    <br>
+    <form #presForm="ngForm">
+
+      <!-- <div class="form-group">
+        <label for="doctor">Médico</label>
+        <input type="text" class="form-control" id="doctor" required [(ngModel)]="model.doctor.member" name="doctor" #doctorInput="ngModel"
+          disabled>
+        <div [hidden]="doctorInput.valid || doctorInput.pristine" class="alert alert-danger">
+          Médico requerido
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <label for="doctors">Médico</label>
+        <select class="form-control" id="doctors" required #selDoc (change)="onChangeDoctor(selDoc.value);">
+          <option value="-1">Seleccionar</option>
+          <option *ngFor="let doc of availableDoctors" [value]="doc.index">{{doc.firstName}} {{doc.lastName}} {{doc.secondLastName}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="professionalLicense">Cédula Profesional</label>
+        <input type="text" class="form-control" id="professionalLicense" required [(ngModel)]="model.doctor.professionalLicense" name="professionalLicense" #professionalLicenseInput="ngModel"
+          >
+        <div [hidden]="professionalLicenseInput.valid || professionalLicenseInput.pristine" class="alert alert-danger">
+          Cédula profesional requerida
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="workAddress">Consultorio</label>
+        <input type="text" class="form-control" id="workAddress" required [(ngModel)]="model.doctor.address" name="address" #workAddressInput="ngModel"
+          >
+        <div [hidden]="workAddressInput.valid || workAddressInput.pristine" class="alert alert-danger">
+          Consultorio requerido
+        </div>
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="patient">Paciente</label>
+        <input type="text" class="form-control" id="patient" required [(ngModel)]="model.patient" name="patient" #patientInput="ngModel"
+          disabled>
+        <div [hidden]="patientInput.valid || patientInput.pristine" class="alert alert-danger">
+          Paciente requerido
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <label for="patients">Paciente</label>
+        <select class="form-control" id="patients" required #selPatient (change)="onChangePatient(selPatient.value);">
+          <option value="-1">Seleccionar</option>
+          <option *ngFor="let patient of availablePatients" [value]="patient.index">{{patient.type}} - {{patient.firstName}} {{patient.lastName}} {{patient.secondLastName}}</option>
+        </select>
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="mainLGSGroup">Grupo principal SSA</label>
+        <input type="text" class="form-control" id="mainLGSGroup" required [(ngModel)]="model.aditionalInfo.mainLGSGroup" name="mainLGSGroup" #mainLGSGroupInput="ngModel">
+        <div [hidden]="mainLGSGroupInput.valid || mainLGSGroupInput.pristine" class="alert alert-danger">
+          Grupo principal SSA requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="validityDays">Días de validez</label>
+        <input type="text" class="form-control" id="validityDays" required [(ngModel)]="model.aditionalInfo.validityDays" name="validityDays" #validityDaysInput="ngModel">
+        <div [hidden]="validityDaysInput.valid || validityDaysInput.pristine" class="alert alert-danger">
+          Días de validez requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="allowedDispensing">Cantidad de veces a surtir</label>
+        <input type="text" class="form-control" id="allowedDispensing" required [(ngModel)]="model.aditionalInfo.allowedDispensing" name="allowedDispensing"
+          #allowedDispensingInput="ngModel">
+        <div [hidden]="allowedDispensingInput.valid || allowedDispensingInput.pristine" class="alert alert-danger">
+          Cantidad de veces a surtir requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dispensedTimes">Veces surtida</label>
+        <input type="text" class="form-control" id="dispensedTimes" required [(ngModel)]="model.aditionalInfo.dispensedTimes" name="dispensedTimes"
+          #dispensedTimesInput="ngModel">
+        <div [hidden]="dispensedTimesInput.valid || dispensedTimesInput.pristine" class="alert alert-danger">
+          Veces surtida requerido
+        </div>
+      </div> -->
+
+      <button type="button" class="btn btn-primary" (click)="addDrugs();">Agregar medicamentos</button>
+      <button type="button" class="btn btn-success" (click)="savePrescription(presForm, selDoc, selPatient);">Guardar</button>
+
+    </form>
+  </div>
+</div>
+
+<div [hidden]="!drugsFlag">
+  <div class="container">
+
+    <h1>Agregar medicamentos</h1>
+    <!-- {{diagnosticPrescribedDrugs}} -->
+    <br>
+
+    <form #drugsForm="ngForm">
+
+      <div class="form-group">
+        <label for="drugs">Medicamentos</label>
+        <select class="form-control" id="drugs" required #sel (change)="onChangeDrug(sel.value);">
+          <option value="-1">Seleccionar</option>
+          <option *ngFor="let drug of availableDrugs" [value]="drug.index">{{drug.drugBrand}} ({{drug.drugGenericName}}) - {{drug.drugPresentation}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="dosage">Dosis</label>
+        <input type="text" class="form-control" id="dosage" required [(ngModel)]="prescribedDrug.dosage" name="dosage" #dosageInput="ngModel">
+        <div [hidden]="dosageInput.valid || dosageInput.pristine" class="alert alert-danger">
+          Dosis requerida
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="treatmentLength">Tratamiento</label>
+        <input type="text" class="form-control" id="treatmentLength" required [(ngModel)]="prescribedDrug.treatmentLength" name="treatmentLength" #treatmentLengthInput="ngModel">
+        <div [hidden]="treatmentLengthInput.valid || treatmentLengthInput.pristine" class="alert alert-danger">
+          Tratamiento requerido
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" (click)="addPrescribedDrugs(sel, drugsForm);" [disabled]="!drugsForm.form.valid">Agregar</button>
+      <button type="button" class="btn btn-primary" (click)="prescribedDrugsBack(sel, drugsForm);">Regresar</button>
+
+    </form>
+  </div>
+</div>
+
+<br>
+<div [hidden]="!(model.drugs.length > 0)">
+  <div class="container">
+    <h4>Medicamentos prescritos</h4>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>EAN</th>
+          <th>Marca</th>
+          <th>Genérico</th>
+          <th>Presentación</th>
+          <th>Vía</th>
+          <th>Grupo SSA</th>
+          
+          <th>Dosis</th>
+          <th>Tratamiento</th>
+
+          <!-- <th>Cantidad a dispensar</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let drug of model.drugs">
+          <td>{{drug.eanCode}}</td>
+          <td>{{drug.drugBrand}}</td>
+          <td>{{drug.drugGenericName}}</td>
+          <td>{{drug.drugPresentation}}</td>
+          <td>{{drug.administrationRoute}}</td>
+          <td>{{drug.lgsGroup}}</td>
+
+          <td>{{drug.dosage}}</td>
+          <td>{{drug.treatmentLength}}</td>
+          
+          <!-- <td>{{drug.quantityToDispense}}</td> -->
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
